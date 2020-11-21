@@ -5,9 +5,20 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Product;
+use App\Category;
 
 class AdminProductController extends Controller
 {
+
+    public function __construct() {
+
+        $this->middleware('auth');
+
+
+
+    }
+
+
     /**
      * Display a listing of the resource.
      *
@@ -16,6 +27,7 @@ class AdminProductController extends Controller
     public function index(Request $request)
     {
         $nombre = $request->get('nombre');
+
         $productos = Product::where('nombre','like',"%$nombre%")->orderBy('nombre','DESC')->paginate(2);
         return view('admin.product.index',compact('productos'));
     }
@@ -27,7 +39,9 @@ class AdminProductController extends Controller
      */
     public function create()
     {
-        //
+        //$categorias = Category::orderBy('nombre','ASC')->paginate(2);
+        $categorias = Category::orderBy('nombre','ASC')->get();
+        return view('admin.product.create',compact('categorias'));
     }
 
     /**
@@ -38,7 +52,41 @@ class AdminProductController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        
+        $prod = new Product;
+
+        $prod->nombre=               $request->nombre;
+        $prod->slug=                 $request->slug;
+        $prod->category_id=          $request->category_id;
+        $prod->cantidad=             $request->cantidad;
+        $prod->precio_anterior=      $request->precioanterior;
+        $prod->precio_actual=        $request->precioactual;
+        $prod->porcentaje_descuento= $request->porcentajededescuento;
+        $prod->descripcion_corta=    $request->descripcion_corta;
+        $prod->descripcion_larga=    $request->descripcion_larga;
+        $prod->especificaciones=     $request->especificaciones;
+        $prod->datos_de_interes=     $request->datos_de_interes;
+        $prod->estado=               $request->estado;
+
+        if ($request->activo) {
+            $prod->activo= 'Si';
+        }
+        else {
+            $prod->activo= 'No'; 
+        }
+
+        if ($request->sliderprincipal) {
+            $prod->sliderprincipal= 'Si';
+        }
+        else {
+            $prod->sliderprincipal= 'No'; 
+        }
+
+        $prod->save();
+        
+        return $prod;
+        
+        //return $request->all();
     }
 
     /**

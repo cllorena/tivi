@@ -4,23 +4,48 @@ use Illuminate\Support\Facades\Route;
 
 use App\Product;
 use App\Category;
+use App\Image;
 
-/*
-|--------------------------------------------------------------------------
-| Web Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider within a group which
-| contains the "web" middleware group. Now create something great!
-|
-*/
+//para hacer las pruebas con las imagenes
+Route::get('/prueba', function () {
+
+
+    //20 eliminar todas las imagenes
+
+    $product = App\Product::find(2);
+    $product->images()->delete();
+    return $product;
+    
+    
+
+
+
+
+});
+
+//mostrar resultados
+Route::get('/resultados', function () {
+
+    $image = App\Image::orderBy('id','Desc')->get();
+    return $image;
+});
+
+
+
+
 
 Route::get('/', function () {
 
+/*$prod= Product::findOrFail(1);
+
+$prod->slug= 'cebolla';
+$prod->save();
+return $prod;
+*/
 /*$prod = new Product();
 $prod->nombre = 'Cebolla';
 $prod->slug = 'Cebolla';
+$prod->category_id = 3;
 $prod->descripcion_corta = 'Mejores Verduras';
 $prod->descripcion_larga = 'Mejores Verduras del Sur de productores CHilenos, de gran calidad y un sabroso gusto';
 $prod->especificaciones = 'Verduras seleccionados';
@@ -28,7 +53,6 @@ $prod->datos_de_interes = 'Producido por productores colonos Alemanes';
 $prod->estado = 'Nuevo';
 $prod->activo = 'Si';
 $prod->sliderprincipal = 'No';
-$prod->category_id = 2;
 $prod->save();
 return $prod;
 */
@@ -78,8 +102,8 @@ Route::get('cancelar/{ruta}',function($ruta) {
 
 
 // CLLA
-Route::get('categorias', function () {
-    $categorias = Category::paginate(2);
-    return view('admin.category.index')->withCategorias($categorias);
-});
+//Route::get('categorias', function () {
+//    $categorias = Category::paginate(2);
+//    return view('admin.category.index')->withCategorias($categorias);
+//});
 // FIN CLLA
